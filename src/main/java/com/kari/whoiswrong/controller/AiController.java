@@ -1,5 +1,6 @@
 package com.kari.whoiswrong.controller;
 
+import com.kari.whoiswrong.service.StoryService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,14 +11,17 @@ public class AiController {
 
     private final ChatClient chatClient;
 
-    public AiController(ChatClient.Builder chatClientBuilder) {
+    private final StoryService storyService;
+
+    public AiController(ChatClient.Builder chatClientBuilder, StoryService storyService) {
         this.chatClient = chatClientBuilder.build();
+        this.storyService = storyService;
     }
 
     @GetMapping("/ai")
     public String ai(@RequestParam String message) {
 
-        return chatClient
+        String aiResult = chatClient
                 .prompt()
                 .system("너는 갈등 상황의 시시비비를 가려주는 판정사야. " +
                         "사용자가 입력하는 사연을 듣고 누가 잘못했는지 판정해 줘. " +
@@ -26,5 +30,9 @@ public class AiController {
                 .user(message)
                 .call()
                 .content();
+
+        storyService.saveStory(message, aiResult);
+
+        return aiResult;
     }
 }

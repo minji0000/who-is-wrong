@@ -135,10 +135,10 @@
         }
 
         let dotCount = 0;
-        resultArea.innerText = 'AI가 사연을 분석하고 있습니다';
+        resultArea.innerText = 'AI가 사연을 분석하고 있습니다 조금 느려도 기다려주세요..!';
         const loadingInterval = setInterval(() => {
             dotCount = (dotCount + 1) % 4;
-            resultArea.innerText = 'AI가 사연을 분석하고 있습니다' + '.'.repeat(dotCount);
+            resultArea.innerText = 'AI가 사연을 분석하고 있습니다 조금 느려도 기다려주세요! ' + '.'.repeat(dotCount);
         }, 500);
 
         try {
