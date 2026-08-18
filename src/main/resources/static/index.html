@@ -5,6 +5,10 @@
     <!-- 모바일 화면 대응을 위한 필수 뷰포트 태그 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>누구의 잘못일까?</title>
+    <!-- Open Graph (카카오톡 공유 미리보기) -->
+    <meta property="og:title" content="누구의 잘못일까? - AI 판정소">
+    <meta property="og:description" content="누가 더 잘못했는지 AI에게 냉정하고 객관적인 판정을 받아보세요!">
+    <meta property="og:url" content="https://who-is-wrong.onrender.com">
     <style>
         body {
             font-family: 'Malgun Gothic', sans-serif;
@@ -21,7 +25,7 @@
             width: 100%;
             max-width: 600px;
             background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
+            padding: 25px;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(255, 105, 180, 0.2);
             box-sizing: border-box; /* 패딩이 너비를 넘지 않도록 설정 */
@@ -31,10 +35,23 @@
             margin-top: 0;
             text-align: center;
             font-size: 24px;
+            margin-bottom: 10px;
+        }
+        /* 안내 문구 스타일 추가 */
+        .guide-text {
+            text-align: center;
+            font-size: 13px;
+            color: #7a7a7a;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            background: #fff8fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed #ffb6c1;
         }
         textarea {
             width: 100%;
-            height: 100px;
+            height: 90px;
             padding: 12px;
             box-sizing: border-box;
             resize: none;
@@ -88,7 +105,17 @@
 
 <div class="chat-container">
     <h2>💖 AI에게 물어봐</h2>
-    <textarea id="messageInput" placeholder="메시지를 입력하세요..."></textarea>
+    <!-- 안내 및 예시 문구 추가 -->
+    <div class="guide-text">
+        누가 더 잘못했는지 억울한 사연을 적어보세요!<br>
+        <span style="color: #b0578c; font-size: 12px; display: inline-block; margin-top: 4px;">
+            (예: 유민이가 민지를 꽉 깨물었대.<br>
+            유민이는 좋아서 그랬다는데 민지는 아파서 울었어.<br>
+            누가 잘못한 거야?)
+        </span>
+    </div>
+
+    <textarea id="messageInput" placeholder="갈등 상황이나 억울한 사연을 입력하세요..."></textarea>
     <button onclick="sendAI()">판정을 부탁해!</button>
 
     <div class="result-box" id="resultArea">여기에 AI 응답이 표시됩니다.</div>
