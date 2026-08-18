@@ -81,6 +81,11 @@
         button:hover {
             background-color: #ff1493;
         }
+        /* 비활성화된 버튼 스타일 */
+        button:disabled {
+            background-color: #ffb6c1;
+            cursor: not-allowed;
+        }
         .result-box {
             margin-top: 20px;
             padding: 15px;
@@ -100,6 +105,30 @@
             color: #b0578c;
             font-weight: bold;
         }
+
+        /* 로딩 모달 스타일 */
+        #loadingModal {
+            display: none; /* 평소에는 숨김 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px 35px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            color: #d81b60;
+            font-weight: bold;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -117,17 +146,29 @@
     </div>
 
     <textarea id="messageInput" placeholder="갈등 상황이나 억울한 사연을 입력하세요..."></textarea>
-    <button onclick="sendAI()">판정을 부탁해!</button>
+    <button id="submitBtn" onclick="sendAI()">판정을 부탁해!</button>
 
     <div class="result-box" id="resultArea">여기에 AI 응답이 표시됩니다.</div>
 
     <div class="footer">개발자: 진카리</div>
 </div>
 
+<!-- 로딩 모달 -->
+<div id="loadingModal">
+    <div class="modal-content" id="modalText">
+        AI가 사연을 분석하고 있습니다... 🤖 조금 늦어도 기다려주세용..
+    </div>
+</div>
+
 <script>
     async function sendAI() {
-        const message = document.getElementById('messageInput').value;
+        const messageInput = document.getElementById('messageInput');
+        const submitBtn = document.getElementById('submitBtn');
         const resultArea = document.getElementById('resultArea');
+        const loadingModal = document.getElementById('loadingModal');
+        const modalText = document.getElementById('modalText');
+
+        const message = messageInput.value;
 
         if (!message.trim()) {
             alert('메시지를 입력해주세요!');
@@ -135,10 +176,17 @@
         }
 
         let dotCount = 0;
-        resultArea.innerText = 'AI가 사연을 분석하고 있습니다 조금 느려도 기다려주세요..!';
+        resultArea.innerText = 'AI가 사연을 분석하고 있습니다.';
+
+        // 1. 로딩 시작: 버튼 비활성화, 입력창 잠금, 모달 띄우기
+        submitBtn.disabled = true;
+        messageInput.disabled = true;
+        loadingModal.style.display = 'flex';
+
         const loadingInterval = setInterval(() => {
             dotCount = (dotCount + 1) % 4;
-            resultArea.innerText = 'AI가 사연을 분석하고 있습니다 조금 느려도 기다려주세요! ' + '.'.repeat(dotCount);
+            const dots = '.'.repeat(dotCount);
+            modalText.innerText = 'AI가 사연을 분석하고 있습니다 조금 느려도 기다려주세요..!' + dots;
         }, 500);
 
         try {
@@ -150,6 +198,11 @@
         } catch (error) {
             clearInterval(loadingInterval);
             resultArea.innerText = '에러가 발생했습니다: ' + error;
+        } finally {
+            // 2. 완료 또는 에러 발생 시 무조건 원상복구
+            submitBtn.disabled = false;
+            messageInput.disabled = false;
+            loadingModal.style.display = 'none';
         }
     }
 </script>
