@@ -171,7 +171,8 @@
         const message = messageInput.value;
 
         if (!message.trim()) {
-            alert('메시지를 입력해주세요!');
+            alert('공백 말고 사연을 적어주세요!');
+            messageInput.focus();
             return;
         }
 
