@@ -86,8 +86,11 @@
             background-color: #ffb6c1;
             cursor: not-allowed;
         }
-        .result-box {
+        .result-wrapper {
+            position: relative;
             margin-top: 20px;
+        }
+        .result-box {
             padding: 15px;
             background: #fff0f5;
             border: 1px solid #ffc0cb;
@@ -97,6 +100,20 @@
             color: #4a4a4a;
             word-break: break-all; /* 긴 영단어 등이 박스를 뚫고 나가는 것 방지 */
             font-size: 15px;
+        }
+        /* 결과 복사하기 버튼 스타일 */
+        #copyBtn {
+            display: none; /* 결과가 나오기 전에는 숨김 */
+            width: auto;
+            padding: 6px 12px;
+            font-size: 13px;
+            background-color: #b0578c;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        #copyBtn:hover {
+            background-color: #8e4370;
         }
         .footer {
             margin-top: 20px;
@@ -148,7 +165,10 @@
     <textarea id="messageInput" placeholder="갈등 상황이나 억울한 사연을 입력하세요..."></textarea>
     <button id="submitBtn" onclick="sendAI()">판정을 부탁해!</button>
 
-    <div class="result-box" id="resultArea">여기에 AI 응답이 표시됩니다.</div>
+    <div class="result-wrapper">
+        <div class="result-box" id="resultArea">여기에 AI 응답이 표시됩니다.</div>
+        <button id="copyBtn" onclick="copyResult()">📋 결과 복사</button>
+    </div>
 
     <div class="footer">개발자: 진카리</div>
 </div>
@@ -165,6 +185,7 @@
         const messageInput = document.getElementById('messageInput');
         const submitBtn = document.getElementById('submitBtn');
         const resultArea = document.getElementById('resultArea');
+        const copyBtn = document.getElementById('copyBtn');
         const loadingModal = document.getElementById('loadingModal');
         const modalText = document.getElementById('modalText');
 
@@ -175,6 +196,9 @@
             messageInput.focus();
             return;
         }
+
+        // 새로운 판정 시작 시 기존 복사 버튼 숨김
+        copyBtn.style.display = 'none';
 
         let dotCount = 0;
         resultArea.innerText = 'AI가 사연을 분석하고 있습니다.';
@@ -196,6 +220,9 @@
 
             clearInterval(loadingInterval);
             resultArea.innerText = data;
+
+            // 결과가 정상적으로 나오면 복사 버튼 표시
+            copyBtn.style.display = 'block';
         } catch (error) {
             clearInterval(loadingInterval);
             resultArea.innerText = '에러가 발생했습니다: ' + error;
@@ -205,6 +232,23 @@
             messageInput.disabled = false;
             loadingModal.style.display = 'none';
         }
+    }
+
+    // 클립보드 복사 함수
+    function copyResult() {
+        const resultArea = document.getElementById('resultArea');
+        const copyBtn = document.getElementById('copyBtn');
+        const textToCopy = resultArea.innerText;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            copyBtn.innerText = '복사 완료! ✨';
+            setTimeout(() => {
+                copyBtn.innerText = '📋 결과 복사';
+            }, 2000);
+        }).catch(err => {
+            alert('복사에 실패했습니다 ㅠㅠ');
+            console.error(err);
+        });
     }
 </script>
 
