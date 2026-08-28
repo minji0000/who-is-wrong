@@ -50,6 +50,10 @@
             border-radius: 8px;
             border: 1px dashed #ffb6c1;
         }
+        .textarea-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
         textarea {
             width: 100%;
             height: 90px;
@@ -65,6 +69,15 @@
         }
         textarea:focus {
             border-color: #ff69b4;
+        }
+        /* 글자 수 카운터 스타일 */
+        .char-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            font-size: 12px;
+            color: #999;
+            pointer-events: none;
         }
         button {
             width: 100%;
@@ -162,7 +175,11 @@
         </span>
     </div>
 
-    <textarea id="messageInput" placeholder="갈등 상황이나 억울한 사연을 입력하세요..."></textarea>
+    <div class="textarea-wrapper">
+        <textarea id="messageInput" maxlength="500" placeholder="갈등 상황이나 억울한 사연을 입력하세요..." oninput="updateCounter()"></textarea>
+        <div class="char-counter" id="charCounter">0 / 500자</div>
+    </div>
+
     <button id="submitBtn" onclick="sendAI()">판정을 부탁해!</button>
 
     <div class="result-wrapper">
@@ -181,6 +198,14 @@
 </div>
 
 <script>
+    // 실시간 글자 수 카운터 함수
+    function updateCounter() {
+        const messageInput = document.getElementById('messageInput');
+        const charCounter = document.getElementById('charCounter');
+        const currentLength = messageInput.value.length;
+        charCounter.innerText = `${currentLength} / 500자`;
+    }
+
     async function sendAI() {
         const messageInput = document.getElementById('messageInput');
         const submitBtn = document.getElementById('submitBtn');
