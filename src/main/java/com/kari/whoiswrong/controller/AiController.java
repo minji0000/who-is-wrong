@@ -1,5 +1,6 @@
 package com.kari.whoiswrong.controller;
 
+import com.kari.whoiswrong.entity.Story;
 import com.kari.whoiswrong.service.StoryService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class AiController {
@@ -50,5 +53,11 @@ public class AiController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                     .body("AI 이용량이 초과되었습니다! 잠시 후(약 40초 뒤)에 다시 시도해주세요. (개발자가 가난해서... 무료버전..써서 그래..🥹)");
         }
+    }
+
+    @GetMapping("/api/stories/recent")
+    public ResponseEntity<List<Story>> getRecentStories() {
+        List<Story> recentStories = storyService.getRecentStories();
+        return ResponseEntity.ok(recentStories);
     }
 }
