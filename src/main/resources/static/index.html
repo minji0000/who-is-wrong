@@ -258,6 +258,17 @@
         charCounter.innerText = `${currentLength} / 500자`;
     }
 
+    // 엔터 키 입력 처리 (Enter: 전송, Shift + Enter: 줄바꿈)
+    function handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            if (event.shiftKey) {
+                return; // Shift + Enter는 기본 줄바꿈 동작 허용
+            }
+            event.preventDefault(); // 일반 Enter는 줄바꿈 방지 후 전송 함수 실행
+            sendAI();
+        }
+    }
+
     // 최근 내역 비동기 조회 함수
     async function loadRecentStories() {
         const historyList = document.getElementById('historyList');
@@ -374,7 +385,7 @@
                 copyBtn.innerText = '📋 결과 복사';
             }, 2000);
         }).catch(err => {
-            alert('복사에 실패했습니다 ㅠㅠ');
+            alert('복사에 실패했습니다 ');
             console.error(err);
         });
     }
